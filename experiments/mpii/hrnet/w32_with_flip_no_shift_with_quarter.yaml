@@ -111,7 +111,7 @@ TEST:
   MODEL_FILE: ''
   FLIP_TEST: true
   POST_PROCESS: true
-  SHIFT_HEATMAP: true
+  SHIFT_HEATMAP: false
 DEBUG:
   DEBUG: true
   SAVE_BATCH_IMAGES_GT: true

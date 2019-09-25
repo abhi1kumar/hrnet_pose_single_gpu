@@ -110,7 +110,7 @@ TEST:
   BATCH_SIZE_PER_GPU: 32
   MODEL_FILE: ''
   FLIP_TEST: true
-  POST_PROCESS: true
+  POST_PROCESS: false
   SHIFT_HEATMAP: true
 DEBUG:
   DEBUG: true

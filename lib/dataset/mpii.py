@@ -159,12 +159,20 @@ class MPIIDataset(JointsDataset):
                                      jnt_count)
 
         PCKh = np.ma.array(PCKh, mask=False)
-        PCKh.mask[6:8] = True
-
         jnt_count = np.ma.array(jnt_count, mask=False)
-        jnt_count.mask[6:8] = True
+        # This gives you the weight of each joint
         jnt_ratio = jnt_count / np.sum(jnt_count).astype(np.float64)
-
+        mean_pckh_50 = np.sum(PCKh * jnt_ratio)
+        mean_pckh_10 = np.sum(pckAll[11, :] * jnt_ratio)
+        
+        # Pelvis (point 6) and Thorax (point 7) excluded
+        # Upper neck (point 9) is included        
+        PCKh.mask[6:8] = True
+        jnt_count.mask[6:8] = True
+        jnt_ratio = jnt_count / np.sum(jnt_count).astype(np.float64) 
+        mean_14_pckh_50 = np.sum(PCKh * jnt_ratio)
+        mean_14_pckh_10 = np.sum(pckAll[11, :] * jnt_ratio)
+        
         name_value = [
             ('Head', PCKh[head]),
             ('Shoulder', 0.5 * (PCKh[lsho] + PCKh[rsho])),
@@ -173,9 +181,27 @@ class MPIIDataset(JointsDataset):
             ('Hip', 0.5 * (PCKh[lhip] + PCKh[rhip])),
             ('Knee', 0.5 * (PCKh[lkne] + PCKh[rkne])),
             ('Ankle', 0.5 * (PCKh[lank] + PCKh[rank])),
-            ('Mean', np.sum(PCKh * jnt_ratio)),
-            ('Mean@0.1', np.sum(pckAll[11, :] * jnt_ratio))
+            ('Mean_14_PCKh@0.5', mean_14_pckh_50),
+            ('Mean_PCKh@0.5', mean_pckh_50),
+            ('Mean_14_PCKh@0.1', mean_14_pckh_10),
+            ('Mean_PCKh@0.1', mean_pckh_10)
         ]
         name_value = OrderedDict(name_value)
 
-        return name_value, name_value['Mean']
+        if output_dir:
+            print("Saving NME, head diagonals, PCKh@thresholds, jnt_count, jnt mask in orig resolution")
+            np.save(os.path.join(output_dir, 'nme_new_head_per_image_per_landmark.npy'), np.transpose(scaled_uv_err))
+            np.save(os.path.join(output_dir, 'head_diagonals.npy'), headsizes)
+            np.save(os.path.join(output_dir, 'jnt_visible.npy'), jnt_visible)
+            # Save mean PCKh @ different thresholds with the mean as well.
+            # Also save the joint count so that the results could be reproduced.
+            pckAll_save = np.zeros((len(rng), 17))
+            pckAll_save[:, 0:16] = pckAll        
+            for r in range(len(rng)):
+                pckAll_save[r] = np.sum(pckAll[r, :] * jnt_ratio)
+            
+            np.save(os.path.join(output_dir, 'pck_all.npy'), pckAll_save)
+            np.save(os.path.join(output_dir, 'jnt_count.npy'), jnt_count.data)
+            np.save(os.path.join(output_dir, 'jnt_count_mask.npy'), jnt_count.mask)
+            
+        return name_value, name_value['Mean_PCKh@0.5']

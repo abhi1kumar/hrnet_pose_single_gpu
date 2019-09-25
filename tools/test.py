@@ -95,7 +95,8 @@ def main():
         logger.info('=> loading model from {}'.format(model_state_file))
         model.load_state_dict(torch.load(model_state_file))
 
-    model = torch.nn.DataParallel(model, device_ids=cfg.GPUS).cuda()
+    #model = torch.nn.DataParallel(model, device_ids=cfg.GPUS).cuda()
+    model = model.cuda()
 
     # define loss function (criterion) and optimizer
     criterion = JointsMSELoss(
@@ -115,7 +116,7 @@ def main():
     )
     valid_loader = torch.utils.data.DataLoader(
         valid_dataset,
-        batch_size=cfg.TEST.BATCH_SIZE_PER_GPU*len(cfg.GPUS),
+        batch_size=cfg.TEST.BATCH_SIZE_PER_GPU,#*len(cfg.GPUS),
         shuffle=False,
         num_workers=cfg.WORKERS,
         pin_memory=True

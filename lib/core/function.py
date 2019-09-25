@@ -38,6 +38,7 @@ def train(config, train_loader, model, criterion, optimizer, epoch,
     for i, (input, target, target_weight, meta) in enumerate(train_loader):
         # measure data loading time
         data_time.update(time.time() - end)
+        input = input.cuda()
 
         # compute output
         outputs = model(input)
@@ -116,6 +117,7 @@ def validate(config, val_loader, val_dataset, model, criterion, output_dir,
     with torch.no_grad():
         end = time.time()
         for i, (input, target, target_weight, meta) in enumerate(val_loader):
+            input = input.cuda()
             # compute output
             outputs = model(input)
             if isinstance(outputs, list):
@@ -182,11 +184,11 @@ def validate(config, val_loader, val_dataset, model, criterion, output_dir,
 
             idx += num_images
 
-            if i % config.PRINT_FREQ == 0:
+            if i % config.PRINT_FREQ == 0 or i == len(val_loader)-1:
                 msg = 'Test: [{0}/{1}]\t' \
                       'Time {batch_time.val:.3f} ({batch_time.avg:.3f})\t' \
-                      'Loss {loss.val:.4f} ({loss.avg:.4f})\t' \
-                      'Accuracy {acc.val:.3f} ({acc.avg:.3f})'.format(
+                      'Loss {loss.avg:.4f} ({loss.val:.4f})\t' \
+                      'Accuracy {acc.avg:.3f} ({acc.val:.3f})'.format(
                           i, len(val_loader), batch_time=batch_time,
                           loss=losses, acc=acc)
                 logger.info(msg)
