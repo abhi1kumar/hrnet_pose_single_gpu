@@ -1,13 +1,10 @@
 # Deep High-Resolution Representation Learning for Human Pose Estimation (CVPR 2019)
 ## News
-- If you are interested in internship or research positions related to computer vision in ByteDance AI Lab, feel free to contact me(leoxiaobin-at-gmail.com).
 - [2019/08/27] HigherHRNet is now on [ArXiv](https://arxiv.org/abs/1908.10357), which is a bottom-up approach for human pose estimation powerd by HRNet. We will also release code and models at [Higher-HRNet-Human-Pose-Estimation](https://github.com/HRNet/Higher-HRNet-Human-Pose-Estimation), stay tuned!
 - Our new work [High-Resolution Representations for Labeling Pixels and Regions](https://arxiv.org/abs/1904.04514) is available at [HRNet](https://github.com/HRNet). Our HRNet has been applied to a wide range of vision tasks, such as [image classification](https://github.com/HRNet/HRNet-Image-Classification), [objection detection](https://github.com/HRNet/HRNet-Object-Detection), [semantic segmentation](https://github.com/HRNet/HRNet-Semantic-Segmentation) and [facial landmark](https://github.com/HRNet/HRNet-Facial-Landmark-Detection).
 
 ## Introduction
-This is an official pytorch implementation of [*Deep High-Resolution Representation Learning for Human Pose Estimation*](https://arxiv.org/abs/1902.09212). 
-In this work, we are interested in the human pose estimation problem with a focus on learning reliable high-resolution representations. Most existing methods **recover high-resolution representations from low-resolution representations** produced by a high-to-low resolution network. Instead, our proposed network **maintains high-resolution representations** through the whole process.
-We start from a high-resolution subnetwork as the first stage, gradually add high-to-low resolution subnetworks one by one to form more stages, and connect the mutli-resolution subnetworks **in parallel**. We conduct **repeated multi-scale fusions** such that each of the high-to-low resolution representations receives information from other parallel representations over and over, leading to rich high-resolution representations. As a result, the predicted keypoint heatmap is potentially more accurate and spatially more precise. We empirically demonstrate the effectiveness of our network through the superior pose estimation results over two benchmark datasets: the COCO keypoint detection dataset and the MPII Human Pose dataset. </br>
+This is an UNOFFICIAL pytorch implementation of [*Deep High-Resolution Representation Learning for Human Pose Estimation*](https://arxiv.org/abs/1902.09212). 
 
 ![Illustrating the architecture of the proposed HRNet](/figures/hrnet.png)
 ## Main Results
@@ -60,7 +57,7 @@ We start from a high-resolution subnetwork as the first stage, gradually add hig
 - pose_hrnet_w48\* means using additional data from [AI challenger](https://challenger.ai/dataset/keypoint) for training.
 
 ## Environment
-The code is developed using python 3.6 on Ubuntu 16.04. NVIDIA GPUs are needed. The code is developed and tested using 4 NVIDIA P100 GPU cards. Other platforms or GPU cards are not fully tested.
+The original code was developed using python 3.6 on Ubuntu 16.04. NVIDIA GPUs are needed. The code is developed and tested using 4 NVIDIA P100 GPU cards. The single GPU version was tested on Ubuntu 18.04 with python 3.6 and cuda 10.1 (Other platforms or GPU cards are not fully tested.)
 
 ## Quick start
 ### Installation
@@ -190,16 +187,13 @@ ${POSE_ROOT}
  
 
 ```
-python tools/test.py \
-    --cfg experiments/mpii/hrnet/w32_256x256_adam_lr1e-3.yaml \
-    TEST.MODEL_FILE models/pytorch/pose_mpii/pose_hrnet_w32_256x256.pth
+python tools/test.py --cfg experiments/mpii/hrnet/w32_256x256_adam_lr1e-3.yaml TEST.MODEL_FILE models/pytorch/pose_mpii/pose_hrnet_w32_256x256.pth
 ```
 
 #### Training on MPII dataset
 
 ```
-python tools/train.py \
-    --cfg experiments/mpii/hrnet/w32_256x256_adam_lr1e-3.yaml
+python tools/train.py --cfg experiments/mpii/hrnet/w32_256x256_adam_lr1e-3.yaml
 ```
 
 #### Testing on COCO val2017 dataset using model zoo's models([GoogleDrive](https://drive.google.com/drive/folders/1hOTihvbyIxsm5ygDpbUuJ7O_tzv4oXjC?usp=sharing) or [OneDrive](https://1drv.ms/f/s!AhIXJn_J-blW231MH2krnmLq5kkQ))
@@ -224,7 +218,7 @@ python tools/train.py \
 Many other dense prediction tasks, such as segmentation, face alignment and object detection, etc. have been benefited by HRNet. More information can be found at [Deep High-Resolution Representation Learning](https://jingdongwang2017.github.io/Projects/HRNet/).
 
 ### Citation
-If you use our code or models in your research, please cite with:
+If you use this code or models in your research, please cite the original papers with:
 ```
 @inproceedings{sun2019deep,
   title={Deep High-Resolution Representation Learning for Human Pose Estimation},
